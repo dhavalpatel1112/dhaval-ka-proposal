@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Will You Marry Me?</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #ffebee;
+            overflow: hidden;
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .proposal-box {
+            background-color: white;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            position: relative;
+            z-index: 10;
+            max-width: 500px;
+            width: 90%;
+        }
+        
+        h1 {
+            color: #e91e63;
+            margin-bottom: 20px;
+        }
+        
+        .btn-yes {
+            background-color: #4caf50;
+            color: white;
+            font-size: 20px;
+            padding: 10px 30px;
+            margin: 10px;
+            transition: transform 0.3s;
+        }
+        
+        .btn-yes:hover {
+            transform: scale(1.1);
+        }
+        
+        .btn-no {
+            background-color: #f44336;
+            color: white;
+            font-size: 20px;
+            padding: 10px 30px;
+            margin: 10px;
+            position: absolute;
+            transition: all 0.5s;
+        }
+        
+        .heart {
+            position: absolute;
+            font-size: 20px;
+            color: #e91e63;
+            animation: float 6s ease-in-out infinite;
+            z-index: 1;
+        }
+        
+        @keyframes float {
+            0% {
+                transform: translateY(0) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+        
+        .ring {
+            width: 100px;
+            height: 100px;
+            margin: 0 auto 20px;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.1);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+        
+        .hidden-message {
+            display: none;
+            margin-top: 20px;
+            color: #e91e63;
+            font-weight: bold;
+            font-size: 24px;
+        }
+    </style>
+</head>
+<body>
+    <div class="proposal-box">
+        <img src="https://cdn-icons-png.flaticon.com/512/2583/2583344.png" class="ring" alt="Diamond Ring">
+        <h1>Will You Marry Me?</h1>
+        <p>My love, I can't imagine life without you. Please say yes!</p>
+        
+        <div class="buttons">
+            <button class="btn btn-yes" id="yesBtn">YES! 💍</button>
+            <button class="btn btn-no" id="noBtn">No 😢</button>
+        </div>
+        
+        <div class="hidden-message" id="hiddenMessage">
+            I knew you'd say YES! 😍 Get ready for the wedding planning!
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Create floating hearts
+        function createHearts() {
+            const heart = document.createElement('div');
+            heart.innerHTML = '❤️';
+            heart.className = 'heart';
+            heart.style.left = Math.random() * 100 + 'vw';
+            heart.style.top = Math.random() * 100 + 'vh';
+            heart.style.fontSize = (Math.random() * 30 + 10) + 'px';
+            heart.style.animationDuration = (Math.random() * 6 + 3) + 's';
+            document.body.appendChild(heart);
+            
+            setTimeout(() => {
+                heart.remove();
+            }, 6000);
+        }
+        
+        // Generate hearts every 300ms
+        setInterval(createHearts, 300);
+        
+        // Make the No button run away
+        const noBtn = document.getElementById('noBtn');
+        const yesBtn = document.getElementById('yesBtn');
+        const hiddenMessage = document.getElementById('hiddenMessage');
+        
+        noBtn.addEventListener('mouseover', function() {
+            // Move the button to a random position
+            const x = Math.random() * (window.innerWidth - 200);
+            const y = Math.random() * (window.innerHeight - 100);
+            
+            noBtn.style.left = x + 'px';
+            noBtn.style.top = y + 'px';
+            
+            // Make the button smaller to make it harder to click
+            noBtn.style.transform = 'scale(' + (Math.random() * 0.5 + 0.5) + ')';
+        });
+        
+        noBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            // Move it again if they somehow click it
+            const x = Math.random() * (window.innerWidth - 200);
+            const y = Math.random() * (window.innerHeight - 100);
+            
+            noBtn.style.left = x + 'px';
+            noBtn.style.top = y + 'px';
+        });
+        
+        yesBtn.addEventListener('click', function() {
+            hiddenMessage.style.display = 'block';
+            noBtn.style.display = 'none';
+            yesBtn.textContent = "I SAID YES! 🎉";
+            
+            // Create a heart explosion
+            for(let i = 0; i < 50; i++) {
+                setTimeout(() => {
+                    createHearts();
+                }, i * 100);
+            }
+        });
+    </script>
+</body>
+</html>
