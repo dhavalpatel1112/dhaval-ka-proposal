@@ -8,38 +8,50 @@
     <style>
         body {
             background-color: #ffebee;
-            overflow: hidden;
+            overflow-x: hidden;
             font-family: 'Comic Sans MS', cursive, sans-serif;
-            height: 100vh;
+            min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
+            padding: 20px;
+            margin: 0;
         }
         
         .proposal-box {
             background-color: white;
-            padding: 30px;
+            padding: 25px;
             border-radius: 20px;
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
             text-align: center;
             position: relative;
             z-index: 10;
             max-width: 500px;
-            width: 90%;
+            width: 100%;
+            margin: 20px;
         }
         
         h1 {
             color: #e91e63;
             margin-bottom: 20px;
+            font-size: calc(1.5rem + 1vw);
+        }
+        
+        .buttons {
+            position: relative;
+            min-height: 80px;
+            margin: 30px 0;
         }
         
         .btn-yes {
             background-color: #4caf50;
             color: white;
-            font-size: 20px;
-            padding: 10px 30px;
+            font-size: calc(1rem + 0.5vw);
+            padding: 10px 25px;
             margin: 10px;
             transition: transform 0.3s;
+            z-index: 2;
+            position: relative;
         }
         
         .btn-yes:hover {
@@ -49,11 +61,12 @@
         .btn-no {
             background-color: #f44336;
             color: white;
-            font-size: 20px;
-            padding: 10px 30px;
+            font-size: calc(1rem + 0.5vw);
+            padding: 10px 25px;
             margin: 10px;
             position: absolute;
             transition: all 0.5s;
+            z-index: 1;
         }
         
         .heart {
@@ -62,6 +75,7 @@
             color: #e91e63;
             animation: float 6s ease-in-out infinite;
             z-index: 1;
+            pointer-events: none;
         }
         
         @keyframes float {
@@ -76,10 +90,17 @@
         }
         
         .ring {
-            width: 100px;
-            height: 100px;
-            margin: 0 auto 20px;
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 15px;
             animation: pulse 2s infinite;
+        }
+        
+        @media (min-width: 768px) {
+            .ring {
+                width: 100px;
+                height: 100px;
+            }
         }
         
         @keyframes pulse {
@@ -99,7 +120,12 @@
             margin-top: 20px;
             color: #e91e63;
             font-weight: bold;
-            font-size: 24px;
+            font-size: calc(1.2rem + 0.5vw);
+        }
+        
+        .proposal-text {
+            font-size: calc(1rem + 0.3vw);
+            margin-bottom: 20px;
         }
     </style>
 </head>
@@ -107,7 +133,7 @@
     <div class="proposal-box">
         <img src="https://cdn-icons-png.flaticon.com/512/2583/2583344.png" class="ring" alt="Diamond Ring">
         <h1>Will You Marry Me?</h1>
-        <p>My love, I can't imagine life without you. Please say yes!</p>
+        <p class="proposal-text">My love, I can't imagine life without you. Please say yes!</p>
         
         <div class="buttons">
             <button class="btn btn-yes" id="yesBtn">YES! 💍</button>
@@ -127,8 +153,8 @@
             heart.innerHTML = '❤️';
             heart.className = 'heart';
             heart.style.left = Math.random() * 100 + 'vw';
-            heart.style.top = Math.random() * 100 + 'vh';
-            heart.style.fontSize = (Math.random() * 30 + 10) + 'px';
+            heart.style.top = (window.innerHeight + 20) + 'px';
+            heart.style.fontSize = (Math.random() * 20 + 10) + 'px';
             heart.style.animationDuration = (Math.random() * 6 + 3) + 's';
             document.body.appendChild(heart);
             
@@ -144,27 +170,31 @@
         const noBtn = document.getElementById('noBtn');
         const yesBtn = document.getElementById('yesBtn');
         const hiddenMessage = document.getElementById('hiddenMessage');
+        const buttonsContainer = document.querySelector('.buttons');
         
-        noBtn.addEventListener('mouseover', function() {
-            // Move the button to a random position
-            const x = Math.random() * (window.innerWidth - 200);
-            const y = Math.random() * (window.innerHeight - 100);
+        function moveNoButton() {
+            const containerRect = buttonsContainer.getBoundingClientRect();
+            const maxX = containerRect.width - noBtn.offsetWidth - 20;
+            const maxY = containerRect.height - noBtn.offsetHeight - 20;
+            
+            const x = Math.random() * maxX;
+            const y = Math.random() * maxY;
             
             noBtn.style.left = x + 'px';
             noBtn.style.top = y + 'px';
-            
-            // Make the button smaller to make it harder to click
             noBtn.style.transform = 'scale(' + (Math.random() * 0.5 + 0.5) + ')';
+        }
+        
+        // Handle both mouse and touch events
+        noBtn.addEventListener('mouseover', moveNoButton);
+        noBtn.addEventListener('touchstart', function(e) {
+            e.preventDefault();
+            moveNoButton();
         });
         
         noBtn.addEventListener('click', function(e) {
             e.preventDefault();
-            // Move it again if they somehow click it
-            const x = Math.random() * (window.innerWidth - 200);
-            const y = Math.random() * (window.innerHeight - 100);
-            
-            noBtn.style.left = x + 'px';
-            noBtn.style.top = y + 'px';
+            moveNoButton();
         });
         
         yesBtn.addEventListener('click', function() {
@@ -177,6 +207,16 @@
                 setTimeout(() => {
                     createHearts();
                 }, i * 100);
+            }
+        });
+        
+        // Initial position for the No button
+        moveNoButton();
+        
+        // Handle window resize
+        window.addEventListener('resize', function() {
+            if (!hiddenMessage.style.display || hiddenMessage.style.display === 'none') {
+                moveNoButton();
             }
         });
     </script>
